@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 export type Feature = 'recipe' | 'shopping-list';
 
@@ -8,19 +8,12 @@ export type Feature = 'recipe' | 'shopping-list';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
-  @Output()
-  public featureSelected = new EventEmitter<Feature>();
   
   public collapsed = true;
 
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  onSelect(feature: Feature) {
-    this.featureSelected.emit(feature);
   }
 
 }

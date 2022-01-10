@@ -4,6 +4,10 @@ import { Directive, ElementRef, HostBinding, HostListener } from "@angular/core"
     selector: '[appDropdown]'
 })
 export class DropdownDirective {
+    /**
+     * HostBindig conecta uma propriedade do elemento ao qual a diretiva está inserida com um atribudo criado aqui. 
+     * Ex.: @HostBinding('style.backgroundColor') bgColor: string = 'transparent';
+     */
     @HostBinding('class.open') isOpen = false;
 
     // Dessa meneira o dropdown só fecha apenas com o click na mesma seta de abertura

@@ -8,10 +8,4 @@ import { Feature } from './header/header.component';
 })
 export class AppComponent {
 
-  public loadedFeature: Feature = 'recipe';
-
-  onNavigate(feature: Feature) {
-    this.loadedFeature = feature;
-  }
-
 }
