@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataStorageService } from '../shared/data-storage.service';
 
 export type Feature = 'recipe' | 'shopping-list';
 
@@ -7,13 +8,19 @@ export type Feature = 'recipe' | 'shopping-list';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   
   public collapsed = true;
 
-  constructor() { }
+  constructor(private dataStorageService: DataStorageService) { }
 
-  ngOnInit(): void {
+  onSaveData() {
+    this.dataStorageService.storeRecipes();
+  }
+
+  onFetchData() {
+    this.dataStorageService.fetchRecipes()
+      .subscribe();
   }
 
 }
