@@ -1,13 +1,15 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, Subject, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { User } from './user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  loggedUser = new Subject<User>();
 
   private readonly apiKey = environment.apiKey;
   private readonly baseURL = 'https://identitytoolkit.googleapis.com/v1/accounts';
@@ -24,7 +26,8 @@ export class AuthService {
       password,
       returnSecureToken: true
     }).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      tap(resData => this.handleAuthentication(resData))
     );
   }
 
@@ -34,8 +37,16 @@ export class AuthService {
       password,
       returnSecureToken: true
     }).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      tap(resData => this.handleAuthentication(resData))
     );
+  }
+
+  private handleAuthentication(resData: AuthResponseData | LoginResponseData) {
+    const expDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
+    const user = new User(resData.email, resData.localId, resData.idToken, expDate);
+
+    this.loggedUser.next(user);
   }
 
   private handleError(errorResponse: HttpErrorResponse) {
@@ -64,5 +75,5 @@ export interface AuthResponseData {
 }
 
 interface LoginResponseData extends AuthResponseData {
-  registered: boolean;
+  registered?: boolean;
 }
