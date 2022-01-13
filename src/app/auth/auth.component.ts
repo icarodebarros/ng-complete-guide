@@ -13,7 +13,7 @@ import { AuthResponseData, AuthService } from './auth.service';
 export class AuthComponent implements OnInit {
   isLoginMode = true;
   isLoading = false;
-  error!: string;
+  error!: string | null;
 
   constructor(private authService: AuthService,
     private router: Router) { }
@@ -54,6 +54,10 @@ export class AuthComponent implements OnInit {
 
 
     form.reset();
+  }
+
+  onHandleError() {
+    this.error = null;
   }
 
 }

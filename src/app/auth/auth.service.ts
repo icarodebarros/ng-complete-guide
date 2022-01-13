@@ -12,7 +12,7 @@ import { User } from './user.model';
 export class AuthService {
   loggedUser = new BehaviorSubject<User | null>(null);
 
-  private tokenExpTimer!: NodeJS.Timeout | null;
+  private tokenExpTimer!: number | null;
 
   private readonly apiKey = environment.apiKey;
   private readonly baseURL = 'https://identitytoolkit.googleapis.com/v1/accounts';
@@ -73,13 +73,13 @@ export class AuthService {
     
     localStorage.removeItem('userData');
     if (this.tokenExpTimer) {
-      clearTimeout(this.tokenExpTimer);
+      window.clearTimeout(this.tokenExpTimer);
     }
     this.tokenExpTimer = null;
   }
 
   autoLogout(expDuration: number) {
-    this.tokenExpTimer = setTimeout(() => {
+    this.tokenExpTimer = window.setTimeout(() => {
       this.logout();
     }, expDuration);
   }
