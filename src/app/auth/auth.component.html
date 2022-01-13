@@ -3,10 +3,17 @@
         <div *ngIf="isLoading" class="spinner">
             <app-loading-spinner></app-loading-spinner>
         </div>
+        <!-- SOLUÇÃO 1 -->
         <!-- <div class="alert alert-danger" *ngIf="error">
             <p>{{ error }}</p>
         </div> -->
-        <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert>
+
+        <!-- SOLUÇÃO 2 -->
+        <!-- <app-alert [message]="error" *ngIf="error" (close)="onHandleError()"></app-alert> -->
+
+        <!-- SOLUÇÃO 3 -->
+        <ng-template appPlaceholder></ng-template>
+
         <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
             <div class="form-group">
                 <label for="email">E-mail</label>
