@@ -12,6 +12,8 @@ import { User } from './user.model';
 export class AuthService {
   loggedUser = new BehaviorSubject<User | null>(null);
 
+  private tokenExpTimer!: NodeJS.Timeout | null;
+
   private readonly apiKey = environment.apiKey;
   private readonly baseURL = 'https://identitytoolkit.googleapis.com/v1/accounts';
 
@@ -44,9 +46,42 @@ export class AuthService {
     );
   }
 
+  autoLogin() {
+    const userDataStr = localStorage.getItem('userData');
+    if (userDataStr) {
+      const userData: {
+        email: string,
+        id: string,
+        _token: string,
+        _tokenExp: string
+      } = JSON.parse(userDataStr);
+      
+      const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExp));
+      if (loadedUser.token) {
+        this.loggedUser.next(loadedUser);
+        // Duration remain = token exp time - current time
+        const RemainingExpDuration = new Date(userData._tokenExp).getTime() - new Date().getTime();
+        this.autoLogout(RemainingExpDuration);
+      }
+    }
+
+  }
+
   logout() {
     this.loggedUser.next(null);
     this.router.navigate(['/auth']);
+    
+    localStorage.removeItem('userData');
+    if (this.tokenExpTimer) {
+      clearTimeout(this.tokenExpTimer);
+    }
+    this.tokenExpTimer = null;
+  }
+
+  autoLogout(expDuration: number) {
+    this.tokenExpTimer = setTimeout(() => {
+      this.logout();
+    }, expDuration);
   }
 
   private handleAuthentication(resData: AuthResponseData | LoginResponseData) {
@@ -54,6 +89,8 @@ export class AuthService {
     const user = new User(resData.email, resData.localId, resData.idToken, expDate);
 
     this.loggedUser.next(user);
+    localStorage.setItem('userData', JSON.stringify(user));
+    this.autoLogout(+resData.expiresIn * 1000)
   }
 
   private handleError(errorResponse: HttpErrorResponse) {
