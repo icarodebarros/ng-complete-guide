@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
@@ -9,12 +10,13 @@ import { User } from './user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  loggedUser = new Subject<User>();
+  loggedUser = new BehaviorSubject<User | null>(null);
 
   private readonly apiKey = environment.apiKey;
   private readonly baseURL = 'https://identitytoolkit.googleapis.com/v1/accounts';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private router: Router) { }
 
   private getURL(functionality: 'signUp' | 'signInWithPassword') {
     return `${this.baseURL}:${functionality}?key=${this.apiKey}`;
@@ -31,7 +33,7 @@ export class AuthService {
     );
   }
 
-  login (email: string, password: string): Observable<LoginResponseData> {
+  login(email: string, password: string): Observable<LoginResponseData> {
     return this.http.post<LoginResponseData>(this.getURL('signInWithPassword'), {
       email,
       password,
@@ -40,6 +42,11 @@ export class AuthService {
       catchError(this.handleError),
       tap(resData => this.handleAuthentication(resData))
     );
+  }
+
+  logout() {
+    this.loggedUser.next(null);
+    this.router.navigate(['/auth']);
   }
 
   private handleAuthentication(resData: AuthResponseData | LoginResponseData) {

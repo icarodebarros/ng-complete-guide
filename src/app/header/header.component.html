@@ -23,7 +23,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li *ngIf="isAuthenticated">
-                    <a class="clickable">Logout</a>
+                    <a class="clickable" (click)="onLogout()">Logout</a>
                 </li>
                 <li class="dropdown" appDropdown *ngIf="isAuthenticated">
                     <a class="dropdown-toggle clickable" role="button">Manage <span class="caret"></span></a>
