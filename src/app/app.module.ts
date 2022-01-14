@@ -8,10 +8,7 @@ import { HeaderComponent } from './header/header.component';
 import { ShoppingListService } from './shopping-list/shoppint-list.service';
 import { RecipeService } from './recipes/recipe.service';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
-import { RecipesModule } from './recipes/recipes.module';
-import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
-import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -22,10 +19,10 @@ import { AuthModule } from './auth/auth.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    RecipesModule,
-    ShoppingListModule,
+    // RecipesModule, // This module is loading lazily on AppRouting, so it should not be imported here (Eager loading).
+    // ShoppingListModule,
+    // AuthModule,
     SharedModule,
-    AuthModule,
   ],
   providers: [
     ShoppingListService,
