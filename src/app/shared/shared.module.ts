@@ -18,7 +18,7 @@ import { PlaceholderDirective } from './placeholder.directive';
   imports: [
     CommonModule
   ],
-  exports: [
+  exports: [ // You only need to export components (,directives, pipes) and modules. No need for services!
     CommonModule,
     LoadingSpinnerComponent,
     AlertComponent,
