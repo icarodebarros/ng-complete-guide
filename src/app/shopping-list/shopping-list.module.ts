@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ShoppingListComponent } from './shopping-list.component';
 import { ShoppingEditComponent } from './shopping-edit/shopping-edit.component';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   { path: 'shopping-list', component: ShoppingListComponent },
@@ -17,9 +16,9 @@ const routes: Routes = [
     ShoppingEditComponent,
   ],
   imports: [
-    CommonModule,
     FormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    SharedModule,
   ],
   exports: [
     RouterModule
