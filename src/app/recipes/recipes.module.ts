@@ -23,8 +23,8 @@ import { RecipesRoutingModule } from './recipes-routing.module';
     RecipeEditComponent,
   ],
   imports: [
-    CommonModule,
-    RouterModule,
+    CommonModule, // unlocks ngFor, ngIf, ...
+    RouterModule, // allows <router-outlet>
     ReactiveFormsModule,
     RecipesRoutingModule,
   ],
