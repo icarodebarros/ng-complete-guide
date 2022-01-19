@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
-import { DataStorageService } from '../shared/data-storage.service';
+import { map } from 'rxjs/operators';
+import * as AuthActions from '../auth/ngrx-store/auth.actions';
+import * as fromApp from '../ngrx-store/app.reducer';
+import * as RecipesActions from '../recipes/ngrx-store/recipe.actions';
 
-export type Feature = 'recipe' | 'shopping-list';
 
 @Component({
   selector: 'app-header',
@@ -15,14 +17,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public isAuthenticated = false;
   public collapsed = true;
 
-  constructor(private dataStorageService: DataStorageService,
-    private authService: AuthService) { }
+  constructor(
+    private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {
-      this.userSub = this.authService.loggedUser
-        .subscribe(user => {
-          this.isAuthenticated = !!user;
-        })
+    this.userSub = this.store.select('auth')
+      .pipe(map(authState => authState?.user))
+      .subscribe(user => {
+        this.isAuthenticated = !!user;
+      })
   }
 
   ngOnDestroy(): void {
@@ -30,16 +33,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onSaveData() {
-    this.dataStorageService.storeRecipes();
+    this.store.dispatch(new RecipesActions.StoreRecipes());
   }
 
   onFetchData() {
-    this.dataStorageService.fetchRecipes()
-      .subscribe();
+    this.store.dispatch(new RecipesActions.FetchRecipes());
   }
 
   onLogout() {
-    this.authService.logout();
+    this.store.dispatch(new AuthActions.Logout());
   }
 
 }

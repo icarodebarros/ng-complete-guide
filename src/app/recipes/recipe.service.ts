@@ -1,9 +1,12 @@
 import { Injectable } from "@angular/core";
+import { Store } from "@ngrx/store";
 import { Subject } from "rxjs";
 
 import { Ingredient } from "../shared/ingredient.model";
-import { ShoppingListService } from "../shopping-list/shoppint-list.service";
+import * as fromApp from "../ngrx-store/app.reducer";
+import * as ShoppingListActions from "../shopping-list/ngrx-store/shopping-list.actions";
 import { Recipe } from "./recipe.model";
+
 
 @Injectable() // Necessário apenas quando se quer injetar algo nessa classe
 export class RecipeService {
@@ -30,23 +33,15 @@ export class RecipeService {
     //         ])
     // ];
 
-    constructor(private shoppingListService: ShoppingListService) { }
+    constructor(private store: Store<fromApp.AppState>) { }
 
-    setRecipes(recipes: Recipe[]) {
-        this.recipes = recipes;
-        this.recipesChanged.next(this.getRecipes());
-    }
     
     getRecipes(): Recipe[] {
         return [...this.recipes];
     }
 
     addIngredientsToShoppingList(ingredients: Ingredient[]) {
-        this.shoppingListService.addIngredients(ingredients);
-    }
-
-    getRecipe(index: number): Recipe {
-        return this.recipes[index];
+        this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
     }
 
     addRecipe(recipe: Recipe) {
