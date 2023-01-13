@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 .clickable {
-    cursor: pointer;
+  cursor: pointer;
 }
 button {
-    margin-right: 0.5em;
+  margin-right: 0.5em;
+}
+.mb-1 {
+  margin-bottom: 1rem;
+}
+.mb-2 {
+  margin-bottom: 2rem;
 }

@@ -23,6 +23,11 @@ export class RecipeDetailComponent implements OnInit {
         this.id = +params['id'];
         this.recipe = this.recipeService.getRecipe(this.id);
       });
+
+    // this.route.data
+    //   .subscribe(( resolvedObj:any ) => {
+    //     console.log(resolvedObj[0])
+    //   });
   }
 
   onAddToShoppingList() {
