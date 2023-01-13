@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { RecipeService } from '../recipe.service';
 
@@ -46,9 +46,9 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onAddIngredient() {
-    (<UntypedFormArray>this.recipeForm.get('ingredients')).push(new UntypedFormGroup({
-      'name': new UntypedFormControl(null, Validators.required),
-      'amount': new UntypedFormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
+    (<UntypedFormArray>this.recipeForm.get('ingredients')).push(new FormGroup<IngredientForm>({
+      'name': new FormControl(null, Validators.required),
+      'amount': new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
     }));
   }
 
@@ -73,9 +73,9 @@ export class RecipeEditComponent implements OnInit {
       recipeDescription = recipe.description;
       if (recipe['ingredients']) {
         for (let ingredient of recipe.ingredients) {
-          recipeIngredients.push(new UntypedFormGroup({
-            'name': new UntypedFormControl(ingredient.name, Validators.required),
-            'amount': new UntypedFormControl(ingredient.amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
+          recipeIngredients.push(new FormGroup<IngredientForm>({
+            'name': new FormControl<string>(ingredient.name, Validators.required),
+            'amount': new FormControl<number>(ingredient.amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
           }));
         }
       }
@@ -89,4 +89,9 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
+}
+
+interface IngredientForm {
+  name: FormControl<string | null>;
+  amount: FormControl<number | null>;
 }
